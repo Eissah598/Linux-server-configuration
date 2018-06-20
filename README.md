@@ -19,6 +19,7 @@ RUN THE SERVER AS A GRADER:
 ```
  ssh -i /path/to/privatekey -p 2200 grader@13.232.113.129 
 ```
+* give the path of private key at ```/path/to/privatekey``` which is located on your system
 * The password for grader is also provided in ```notes to reviewer``` field
 * The grader have permission as root user
 * grader is also a super user and have given a sudo permission for grader
