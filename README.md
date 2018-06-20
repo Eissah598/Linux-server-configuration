@@ -47,26 +47,30 @@ KEY PAIRS:
 8. Generate an ssh key for grader on your local machine
 ```ssh-keygen```
 9. give sudo permissions to grader
-```su - grader```
+```su - grader```wait a min 
 10. currently the grader is in the user folder i.e., root folder
 11. create a directory .ssh there and new file named authorized_keys
-```sudo mkdir .ssh
+```
+	sudo mkdir .ssh
    sudo nano .ssh/authorized_keys
 ```
 12. copy the public key and paste it into authorized_keys folder and press ctrl_x to save the file
 PERMISSIONS:
 13. give chmod permissions to the .ssh directory and authorized_keys file
-```chmod 700 .ssh
+```
+	chmod 700 .ssh
    chmod 644 .ssh/authorized_keys
 ```
 14. restart ssh
 ```sudo service ssh restart```
 15. Log in to the grader with the private key
-```ssh -i .ssh/id_rsa grader@ipaddress 
+```
+ssh -i .ssh/id_rsa grader@ipaddress 
 ```
 CHANGING PORT AND ROOT LOGIN PERMISSIONS:
 16. change port
-```sudo nano /etc/ssh/sshd_config
+```
+sudo nano /etc/ssh/sshd_config
 ```
 17. restart ssh 
 ```service ssh restart```
@@ -74,21 +78,24 @@ CHANGING PORT AND ROOT LOGIN PERMISSIONS:
 19. now log into the grader with private key and ssh port with the following command
 ```ssh -i .ssh/id_rsa -p 2200 grader@ipaddress```
 20. disable the root login
-```sudo nano /etc/ssh/sshd_config
+```
+	sudo nano /etc/ssh/sshd_config
     change permitrootlogin no
 ```
 FIREWALL CONFIGURATION:
 21. type the following commands 
-```sudo ufw allow 2200/tcp
-   sudo ufw allow 80/tcp
-   sudo ufw allow 123/udp
-   sudo ufw enable
+```
+	sudo ufw allow 2200/tcp
+    sudo ufw allow 80/tcp
+    sudo ufw allow 123/udp
+    sudo ufw enable
 ```
 22. check the status make sure if it is active
 ```sudo ufw status```
 TIME ZONE:
 23. changing time zone
-```sudo dpkg-reconfigure tzdata
+```
+	sudo dpkg-reconfigure tzdata
 ```
 24. select the none of the above option and then select utc option
 APACHE2 CONFIGURATION:
@@ -100,14 +107,16 @@ APACHE2 CONFIGURATION:
 ```sudo a2enmod wsgi```
 SETTING UP FLASK:
 28. create a flask app folder in /var/www and move into it
-```sudo mkdir FlaskApp
-   cd FlaskApp
+```
+	sudo mkdir FlaskApp
+    cd FlaskApp
 ```
 29. Install git
 ```sudo apt-get install git```
 30. Create another flask app folder
-```sudo mkdir FlaskApp
-   cd FlaskApp
+```
+	sudo mkdir FlaskApp
+    cd FlaskApp
 ```
 31. clone your project directory
 ```sudo git clone https://github.com/username/catalog_item.git```
@@ -117,7 +126,8 @@ POSTGRESQL AND DB SET UP:
 34. install postgres ```sudo apt-get install postgresql```
 35. log into the user and shell ```sudo -i -u postgres psql```
 36. create a user catalog with password 'password'
-```CREATE USER catalog WITH PASSWORD 'password';
+```
+	CREATE USER catalog WITH PASSWORD 'password';
 ```
 37. if you change the password u need to make changes in database_setup and init files where engine is used
 38. give permission to user to create database ```ALTER USER catalog CREATEDB;```
@@ -134,44 +144,48 @@ engine = create_engine('postgresql://catalog:password@localhost/catalog')
 ```
 ENABLE AND CONFIG A NEW VIRTUAL HOST:
 45. open the flaskapp.config file
-```sudo nano /etc/apache2/sites-available/FlaskApp.conf
+```
+	sudo nano /etc/apache2/sites-available/FlaskApp.conf
 ```
 46. past the following code into that file
-```<VirtualHost *:80>
- 	ServerName mywebsite.com
- 	ServerAdmin admin@mywebsite.com
- 	WSGIScriptAlias / /var/www/FlaskApp/flaskapp.wsgi
- 	<Directory /var/www/FlaskApp/FlaskApp/>
- 		Order allow,deny
- 		Allow from all
- 	</Directory>
- 	Alias /static /var/www/FlaskApp/FlaskApp/static
- 	<Directory /var/www/FlaskApp/FlaskApp/static/>
- 		Order allow,deny
- 		Allow from all
- 	</Directory>
- 	ErrorLog ${APACHE_LOG_DIR}/error.log
- 	LogLevel warn
- 	CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>
+```
+	<VirtualHost *:80>
+		ServerName mywebsite.com
+		ServerAdmin admin@mywebsite.com
+		WSGIScriptAlias / /var/www/FlaskApp/flaskapp.wsgi
+		<Directory /var/www/FlaskApp/FlaskApp/>
+			Order allow,deny
+			Allow from all
+		</Directory>
+		Alias /static /var/www/FlaskApp/FlaskApp/static
+		<Directory /var/www/FlaskApp/FlaskApp/static/>
+			Order allow,deny
+			Allow from all
+		</Directory>
+		ErrorLog ${APACHE_LOG_DIR}/error.log
+		LogLevel warn
+		CustomLog ${APACHE_LOG_DIR}/access.log combined
+	</VirtualHost>
 ```
 47. enable the virtual host
 ```sudo a2ensite FlaskApp```
 48. to disable the apche2 page
 ```sudo a2dissite 000-default.conf```
 49. create the flaskapp.wsgi file in /var/www/FlaskApp folder
-```cd /var/www/FlaskApp
-   sudo nano flaskapp.wsgi 
+```
+	cd /var/www/FlaskApp
+    sudo nano flaskapp.wsgi 
 ```
 50. add the following code in wsgi file
-```#!/usr/bin/python
- import sys
- import logging
- logging.basicConfig(stream=sys.stderr)
- sys.path.insert(0,"/var/www/FlaskApp/")
+```
+	#!/usr/bin/python
+ 	import sys
+ 	import logging
+ 	logging.basicConfig(stream=sys.stderr)
+ 	sys.path.insert(0,"/var/www/FlaskApp/")
 
- from FlaskApp import app as application
- application.secret_key = 'Add your secret key'
+ 	from FlaskApp import app as application
+ 	application.secret_key = 'Add your secret key'
 ```
 51. Install pip 
 ```sudo apt-get install python-pip```
@@ -181,7 +195,8 @@ SCRIPT ORIGIN AND URI REDIRECTS:
 java script origin:
  ```http://ipaddress.xip.ip```
 Redirect uri:
- ```http://ipaddress.xip.io/login
+ ```
+ http://ipaddress.xip.io/login
 
 http://ipaddress.xip.io/gconnect
 
